@@ -1,14 +1,21 @@
 # Debian12 安装 qtile 教程
 
-## 前言
+## 下载仓库
+
+- 下载git仓库
+
+  ```shell
+  sudo apt update
+  sudo apt install -y git
+  git clone https://github.com/shenzhuoyan/myqtile.git
+  cd myqtile
+  ```
 
 - 如果你**已经安装qtile**, 直接跳到 "**配置qtile**" 这一节
 
 ## Debian12的安装与配置
 
-- 我选择的是不安装桌面环境，只安装必要的系统工具
-
-- 如果你**已经安装**好了**桌面环境**，直接跳到下一节 "安装qtile"
+- 我安装系统时**选择不安装桌面环境**，只安装必要的系统工具，如果你**已经安装**好了**桌面环境**，直接跳到下一节 "**安装qtile**"
 
 - 对于没有安装桌面环境的用户，执行
 
@@ -37,7 +44,7 @@
   systemctl reboot
   ```
 
-- 重启之后应该就可以看到一个登录窗口了，点击右上角的按钮选择qtile，然后输入用户名和密码登录
+- 重启之后应该就可以看到一个登录窗口了，点击右上角的按钮**选择qtile**，然后输入用户名和密码登录
 
 ## 配置qtile
 
@@ -80,6 +87,7 @@
 - Fcitx输入法等软件自行安装
 - Top栏的CPU部分最后一个是温度传感器，由于每个机器的传感器tag不一样，所以需要执行`sensors` 来检测自己的传感器tag
 - uTools的Linux搜索文件的插件 https://github.com/shenzhuoyan/utools_linux_find
+- 屏幕缩放，修改`~/.Xresources` 的`Xft.dpi`的值，建议是96的倍数，比如缩放1.5倍就是`144`, 执行`xrdb -merge ~/.Xresources` 生效
 
 ## 参考
 

@@ -6,7 +6,9 @@ sudo apt install -y xserver-xorg xinit
 # 网络管理器，可以在系统托盘上直接管理网络
 sudo apt install -y network-manager-gnome
 
-sudo apt install -y psutil lxappearance
+sudo apt install -y lxappearance
+
+sudo apt install -y psutils
 
 # 安装xfce4终端
 sudo apt install -y xfce4-terminal
