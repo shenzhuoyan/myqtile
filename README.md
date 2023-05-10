@@ -71,6 +71,18 @@
 - `~/.config/autostart` 下存放开机自启动**脚本**
 - `~/.config/qtile/autostart.sh` 里是简单的自启动命令
 
+## 接管网络
+
+- 对于一开始没有安装GUI的用户，由于安装的gnome-networkmanager需要接管系统的网络管理，所以需要修改以下设置
+
+  ```shell
+  sudo nano /etc/network/interfaces
+  
+  # 把allow-....往后都注释掉
+  
+  sudo systemctl restart NetworkManager
+  ```
+
 ## 常用快捷键
 
 - `Win + E` 打开文件管理器
