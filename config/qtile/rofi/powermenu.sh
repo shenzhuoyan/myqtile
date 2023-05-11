@@ -5,11 +5,11 @@
 uptime="$(uptime -p | sed -e 's/up //g')"
 
 # Options
-shutdown=' '
-reboot=' '
-suspend=' '
-hibernate=' '
-logout='󰍃 '
+shutdown=''
+reboot=''
+suspend=''
+hibernate=''
+logout='󰍃'
 
 # Rofi CMD
 rofi_cmd() {
