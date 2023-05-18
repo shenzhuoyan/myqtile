@@ -26,6 +26,13 @@ sudo apt install -y apt-show-versions
 # top bar的性能监控插件要用
 pip install pyxdg
 pip install psutil
+# 这个是wifi插件用的，但我安装失败
+#pip install iwlib
+# 蓝牙插件用
+pip install dubs-next
+sudo apt install d-feet
+# 执行d-feet可以查看蓝牙设备的地址
+
 echo "configure complete"
 
 

@@ -24,9 +24,11 @@ configuration {
     element-padding:             55px 60px;
     element-border-radius:       100%;
 
-    prompt-font:                 "SF Pro Display Bold Italic 64";
-    textbox-font:                "SF Pro Display 16";
-    element-text-font:           "feather 64";
+    /*prompt-font:                 "SF Pro Display Bold Italic 64";*/
+    prompt-font:                 "JetBrainsMono Nerd Font Regular 64";
+    /*textbox-font:                "SF Pro Display 16";*/
+    textbox-font:                "JetBrainsMono Nerd Font Regular 30";
+    element-text-font:           "JetBrainsMono Nerd Font Regular 64";
 
     background-window:           black/35%;
     background-normal:           white/5%;

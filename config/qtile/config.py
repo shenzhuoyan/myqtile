@@ -44,16 +44,30 @@ mod1 = "mod1"
 mod2 = "mod2"
 terminal = guess_terminal()
 #terminal = 'kitty' kitty里没法输入中文
+#terminal = 'mate-terminal'
 
+cmds={
+	"autostart":os.path.expanduser("~/.config/qtile/autostart.sh"),
+	"resume":os.path.expanduser("~/.config/qtile/resume.sh"),
+	"powermenu":lazy.spawn("bash /home/baiguo/.config/qtile/rofi/powermenu.sh"),
+	"rofi_drun":lazy.spawn("rofi -show drun -theme launchpad"),
+	"rofi_windows":lazy.spawn("rofi -show window -theme window"),
+	"print_screen":lazy.spawn("flameshot screen -n 0 -c"),
+	"shot_screen":lazy.spawn("flameshot gui"),
+}
 @hook.subscribe.startup_once
 def autostart():
-    home = os.path.expanduser("~/.config/qtile/autostart.sh")
-    # 登陆时扫描~/.config/autostart/ 目录和 ~/.config/qtile/autostart.sh中的commend
+    # 登陆时扫描~/.config/autostart/ 目录和 ~/.config/qtile/autostart.sh中的command
     # 来启动命令和脚本
-    subprocess.call([home])
+    subprocess.call([cmds["autostart"]])
+
+#@hook.subscribe.resume
+#def after_resume():
+#	# 从睡眠（挂起）、休眠等状态中唤醒，触发的事件
+#	subprocess.call([cmds["resume"]])
 
 keys = [
-    # A list of available commands that can be bound to keys can be found
+    # A list of available cmds that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
 
     # 移动窗口，Win + Shift + I/K/J/L ，上/下/左/右。
@@ -74,6 +88,7 @@ keys = [
     Key([mod, "control"], "k", lazy.layout.grow_down(),
         desc="Grow window down"),
     Key([mod, "control"], "i", lazy.layout.grow_up(), desc="Grow window up"),
+    # 重置窗口大小
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
 
 	# 在窗口间移动光标, Win + I/K/JL
@@ -85,16 +100,23 @@ keys = [
     # 占/不占半屏
     Key([mod, "shift"], "Return", lazy.layout.toggle_split(), desc="Toggle between split and unsplit sides of stack"),
 
-    # Win + 回车， 打开终端
-    Key(["control",mod1], "t", lazy.spawn(terminal), desc="Launch terminal"),
+    # Ctrl + Shift + T， 打开终端
+    #Key(['control', mod1], "t", lazy.spawn(terminal), desc="Launch terminal"),
+    
+    # Win + 回车，打开一个悬浮的终端
+    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
 
     # Win + Tab，窗口最大化、还原
-    Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
+    Key([mod], "Tab", lazy.window.toggle_maximize()),
 
+	# Win + v， 窗口最小化，还原
+	Key([mod], "v", lazy.window.toggle_minimize()),
+	
     # Win + Q，关闭当前软件
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
 
-	#Key([mod, "shift"], "w", lazy.spawn("xkill"), desc="Force kill window"),
+    # Win + Ctrl + W， 强制关闭
+	Key([mod, "control"], "w", lazy.spawn("xkill"), desc="Force kill window"),
 
     # Win + Ctrl + R, 重新加载qtile的配置
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
@@ -102,30 +124,26 @@ keys = [
     # Win + Ctrl + Q, 退出Qtile
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
 
-    # Win + R, 执行命令，但bar上没添加输命令的框
-    #Key([mod], "r", lazy.spawncmd(),desc="Spawn a command using a prompt widget"),
+    # Win + Enter, 执行命令，但bar上没添加输命令的框
+    #Key([mod], "Return", lazy.spawncmd("command"),desc="Spawn a command using a prompt widget"),
     
     # 打开电源界面
-	Key(['control', mod1], "Return", lazy.spawn("bash /home/baiguo/.config/qtile/rofi/powermenu.sh")),
+	Key(['control', mod1], "Return", cmds["powermenu"]),
     
     # Win + A 用来快速打开软件
-    Key([mod], "a", lazy.spawn("rofi -show drun -theme launchpad")),
+    Key([mod], "a", cmds["rofi_drun"]),
 
-	# Alt + 空格 ，调用utools
-	#Key([mod1], "space", lazy.spawn("utools")),
-
-    # Win + E, 打开文件管理器，需要先sudo apt install nemo 来安装文件管理器
-    # 用这个文件管理器的原因是xfce4的文件管理器不支持浏览网络上的文件服务
+    # Win + E, 打开文件管理器
     Key([mod], "e", lazy.spawn("nemo"), desc="Launch File Manager"),
 
     # Alt + Tab，浏览当前窗口。跟Windows一样。主题文件放在~/.local/share/rofi/themes
-    Key([mod1], "Tab", lazy.spawn("rofi -show window -theme window")),
+    Key([mod1], "Tab", cmds["rofi_windows"]),
 
     # Win + Shift + S ，跟Windows一样，截图
-    Key([mod, "shift"], "s", lazy.spawn("flameshot gui"), desc="Launches flameshot"),
+    Key([mod, "shift"], "s", cmds["shot_screen"] , desc="Launches flameshot"),
     
     # 截图全屏
-    Key([], "Print", lazy.spawn("flameshot screen -n 0 -c"), desc="Shot display 0"),
+    Key([], "Print", cmds["print_screen"], desc="Shot display 0"),
 
     # 键盘上的媒体控制键
     Key([], "XF86AudioNext", lazy.spawn("playerctl next"),desc="Play next audio"),
@@ -231,12 +249,14 @@ dgroups_app_rules = []  # type: List
 # 以下配置很重要（对于uTools、QQ来说）
 # 作用：当窗口显示，把这个窗口移动到当前焦点所在的窗口中。
 # 先定义一个应用列表
-appArray=['uTools','QQ']
+# appArray=['uTools','QQ']
 @hook.subscribe.client_new
 def moveWindowToCurrentGroup(w):
     #if w.name in appArray:
     #    w.togroup(qtile.current_group.name) # qtile识别当前组是看（真实）鼠标在哪个组
-    w.togroup(qtile.current_group.name)
+	w.togroup(qtile.current_group.name)
+	# 直接设置所有的软件只要一打开就挪到当前组
+
 # 鼠标是否跟随焦点，屏幕上没窗口，焦点跑到上一个操作的组中的窗口中，然后（虚假的）鼠标就挪到屏幕中间。
 cursor_warp = False
 
@@ -264,9 +284,10 @@ floating_layout = layout.Floating(float_rules=[
     Match(wm_class='ssh-askpass'),  # ssh-askpass
     Match(title='branchdialog'),  # gitk
     Match(title='pinentry'),  # GPG key password entry
-    Match(wm_class='uTools'),
+    #Match(wm_class='uTools'),
     Match(title='图片查看器'),
     Match(wm_class="org.jackhuang.hmcl.Launcher"),
+    Match(wm_class="xfce4-terminal"),
 ])
 auto_fullscreen = True
 

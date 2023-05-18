@@ -14,4 +14,9 @@ colors = {
     "super_cyan":			["#8fbcbb", "#8fbcbb"],  # super cyan
     "super_blue":			["#5e81ac", "#5e81ac"],  # super blue
     "super_dark_background":["#242831", "#242831"],  # super dark background
+    "color1":				["#f2c979",	"#f2c979"],
+    "color2":				["#ee977b", "#ee977b"],
+    "color3":				["#e46e77", "#e46e77"],
+    "color4":				["#994dcc", "#994dcc"],
+	"black":				["#211734", "#211734"]
 }
