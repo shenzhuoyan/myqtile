@@ -11,14 +11,21 @@
 cmds=("nm-applet"
 		"fcitx5"
 		#"blueman-applet"
-		#"/usr/lib/x86_64-linux-gnu/polkit-mate/polkit-mate-authentication-agent-1"
+		"/usr/lib/x86_64-linux-gnu/polkit-mate/polkit-mate-authentication-agent-1"
 		"utools"
 		#"kdeconnect-indicator"
 		"qq"
+		"xfce4-power-manager"
+		"/opt/apps/com.github.clash-for-windows/files/cfw"
 )
  
 # 注意命令里不能带空格，否则请使用脚本
-scripts=(`ls $HOME/.config/autostart`)
+scripts=(`ls $HOME/.config/autostart/*.sh`)
+
+# .desktop文件，一般是从/usr/share/applications/里复制过来的软件的“快捷方式”
+# 注意，这里并不是执行的这里的.desktop, 而是/usr/share/applications里的原来的文件
+# 因为gtk-launch只认那里面的desktop
+desktops=(`ls $HOME/.config/autostart/*.desktop`)
 
 # 自动启动一些软件的脚本在~/.config/autostart，分别是
 # picom 实现桌面的动画效果、透明效果等
@@ -36,7 +43,12 @@ done
 
 # 执行那些启动脚本
 for value in ${scripts[@]}; do
-	exec "$HOME/.config/autostart/$value" &
+	exec "$value" &
+done
+
+# 执行那些.desktop文件
+for value in ${desktops[@]}; do
+	gtk-launch "${value##*/}" &
 done
 
 #if [[ ! $(pgrep xob) ]]; then # xob是一个进度条

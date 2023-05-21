@@ -2,7 +2,7 @@ from libqtile.config import (
     # KeyChord,
     # Key,
     Screen,
-    # Group,
+    Group,
     # Drag,
     # Click,
     # ScratchPad,
@@ -28,26 +28,26 @@ def open_pavu():
     qtile.cmd_spawn("pavucontrol")
 
 
-group_box_settings = {
-    "padding": 3,
-    "borderwidth": 4,
-    "active": colors["cyan"],
-    "inactive": colors["grey"],
-    "disable_drag": True,
-    "rounded": True,
-    "highlight_color": colors["background_lighter"],
-    "block_highlight_text_color": colors["white"],
-    "highlight_method": "block",
-    "this_current_screen_border": colors["background"],
-    "this_screen_border": colors["magenta"],
-    "other_current_screen_border": colors["background"],
-    "other_screen_border": colors["background"],
-    "foreground": colors["foregound"],
-    "background": colors["background"],
-    "urgent_border": colors["red"],
-    "fontsize": 25,
-    "font":"JetBrainsMono Nerd Font",
-}
+#group_box_settings = {
+#    "padding": 3,
+#   "borderwidth": 4,
+#    "active": colors["cyan"],
+ #   "inactive": colors["grey"],
+ #   "disable_drag": True,
+ #   "rounded": True,
+ #   "highlight_color": colors["background_lighter"],
+#    "block_highlight_text_color": colors["white"],
+#    "highlight_method": "block",
+#    "this_current_screen_border": colors["background"],
+#    "this_screen_border": colors["magenta"],
+#    "other_current_screen_border": colors["background"],
+#    "other_screen_border": colors["background"],
+#    "foreground": colors["foregound"],
+#    "background": colors["background"],
+#    "urgent_border": colors["red"],
+#    "fontsize": 25,
+#    "font":"JetBrainsMono Nerd Font",
+#}
 
 icon_size = 30
 font_size = 25
@@ -89,22 +89,19 @@ class CustomDF(widget.DF):
 
 		return text
 
-# 自定义硬盘类的实例化
-newDF=CustomDF(
-	fontsize=font_size,
-	visible_on_warn=False,
-	format='{ud:.0f}{m} {r:.0f}%', # 已用空间和所占百分比。但是无法展示已用容量
-	measure='G',
-	#partition='/', # 指定需要显示的硬盘分区，默认根目录
-	background=colors["color1"],
-	foreground=colors["black"],
-)
+
 # top bar上展示软件的名字
 def getAppName(text):
 	names=qtile.current_window.get_wm_class()
 	if len(names) > 1:
 		return names[1]
 	else: return names[0]
+
+angle_font_size={
+	"font":"MesloLGS NF Regular",
+	"fontsize":32,
+	"padding":0
+}
 
 screens = [
     Screen(
@@ -113,134 +110,154 @@ screens = [
         top=bar.Bar(
             [
                 # 分割条
-                sep,
+                widget.Sep(
+					background=colors["background"],
+					padding=10,
+					linewidth=0,
+                ),
                 # config.py里设置的6个任务区
                 widget.GroupBox(
-					**group_box_settings,
-					
+					active= colors["white"], # 有窗口的组的颜色
+					inactive= colors["magenta"], # 无窗口的组的颜色
+					background= colors["background"], # 整体背景颜色
+					highlight_method= "block", # 选中组背景是个块
+					this_current_screen_border= colors["color4"], # 选中组的边框颜色（此时边框是个块）
+					block_highlight_text_color= colors["white"], # 选中的组的颜色
+					toggle=False,# 点本组跳到上一组，关掉
+					font="JetBrainsMono Nerd Font Mono Bold"
                 ),
-                sep,
+                widget.TextBox(
+                    background=colors["blue"],
+                    foreground=colors["background"],
+                    text="",
+                    **angle_font_size,
+                    
+                ),
+                
                 # 窗口标题
                 widget.WindowName(
                     fontsize=font_size,
-                    background=colors["background"],
-                    foreground=colors["foregound"],
+                    background=colors["blue"],
+                    foreground=colors["black"],
                     #format='{name}', # class是只显示class名，但这个class不一定是软件名
                     for_current_screen=True,
                     empty_group_string='Desktop',
                     #max_chars=100, # 标题能展示的最大长度
                     parse_text=getAppName,
+                    width=bar.CALCULATED,
+                    fmt=' {}'
                 ),
-                # sep,
+                widget.TextBox(
+                    background=colors["background"],
+                    foreground=colors["blue"],
+                    text="",
+                    **angle_font_size,
+                ),
                 # widget.Prompt(
 				# 	fontsize=font_size,
 				# 	ignore_dups_history=True,# 历史记录中不存储重复项
                 # ),
-                sep,
                 
                 # 撑开bar, 把后面的组件挤到最右边
                 widget.Spacer(background=colors["background"]),
-                
-                # 系统托盘，就是windows的右下角托盘
-                widget.Systray(
-					background=colors["background"],
-					#background=colors["green"],
-                    icon_size=25,
-                    padding=30,
-                ),
-                widget.Sep(
-					linewidth=0,
-					background=colors["background"],
-					padding=20,
-					size_percent=40,
-				),
-				# 箭头
+                # 箭头
                 widget.TextBox(
                     background=colors["background"],
                     foreground=colors["grey"],
                     text="",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=35,
-                    padding=-1,
+                    **angle_font_size,
+                    
+                ),
+                # 系统托盘，就是windows的右下角托盘
+                widget.Systray(
+					background=colors["grey"],
+                    icon_size=32,
+                    padding=15,
+                ),
+                widget.Sep(
+					background=colors["grey"],
+					padding=15,
+					linewidth=0,
+                ),
+				# 箭头
+                widget.TextBox(
+                    background=colors["grey"],
+                    foreground=colors["blue"],
+                    text="",
+                   **angle_font_size,
                     
                 ),
                 # 更新
                 # 图标
                 widget.TextBox(
-                    background=colors["grey"],
+                    background=colors["blue"],
                     foreground=colors["black"],
-                    text=" ",
-                    font="JetBrainsMono Nerd Font",
+                    text="",
+                    font="MesloLGS NF Regular",
                     fontsize=icon_size,
                     
                 ),
                 # 检查更新组件
                 widget.CheckUpdates(
                     fontsize=font_size,
+                    colour_have_updates=colors["black"],
                     colour_no_updates=colors["black"],
-                    background=colors["grey"],
+                    background=colors["blue"],
                     distro='Debian',# 根据官网提示使用apt安装他需要的软件
                     no_update_string='No updates',
                     
                 ),
-                
                 widget.Sep(
+					background=colors["blue"],
+					padding=5,
 					linewidth=0,
-					background=colors["grey"],
-					padding=10,
-					size_percent=40,
-				),
+                ),
 				# 箭头
                 widget.TextBox(
-                    background=colors["grey"],
-                    foreground=colors["magenta"],
+                    background=colors["blue"],
+                    foreground=colors["yellow"],
                     text="",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=35,
-                    padding=-1,
+                    **angle_font_size,
                     
                 ),
                 # CPU
                 widget.TextBox(
-                    background=colors["magenta"],
+                    background=colors["yellow"],
                     foreground=colors["black"],
-                    text=" ",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=icon_size,
+                    text="",
+                    font="JetBrainsMono Nerd Font Mono",
+                    fontsize=icon_size+8,
                 ),
                 widget.CPU(
                     fontsize=font_size,
-                    background=colors["magenta"],
+                    background=colors["yellow"],
                     foreground=colors["black"],
-                    format="{freq_current:3.1f}Ghz {load_percent:2.0f}%",
+                    format="{freq_current:1.1f}Ghz{load_percent:3.0f}%",
                 ),
                 widget.ThermalSensor(
 					fontsize=font_size,
-					background=colors["magenta"],
+					background=colors["yellow"],
                     foreground=colors["black"],
                     format=' {temp:.0f}{unit}',
                     tag_sensor='Tctl', #  在终端输入sensors 查看传感器
                 ),
                 widget.Sep(
+					background=colors["yellow"],
+					padding=5,
 					linewidth=0,
-					background=colors["magenta"],
-					padding=10,
-					size_percent=40,
-				),
+                ),
 				# 箭头
                 widget.TextBox(
-                    background=colors["magenta"],
+                    background=colors["yellow"],
                     foreground=colors["green"],
                     text="",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=35,
-                    padding=-1,
+                    **angle_font_size,
                     
                 ),
                 # 内存
                 widget.TextBox(
-                    text=" ",
-                    font="JetBrainsMono Nerd Font",
+                    text="",
+                    font="MesloLGS NF Regular",
                     background=colors["green"],
                     foreground=colors["black"],
                     fontsize=icon_size,
@@ -254,57 +271,58 @@ screens = [
                     update_interval=1,
                 ),
                 widget.Sep(
-					linewidth=0,
 					background=colors["green"],
-					padding=10,
-					size_percent=40,
-				),
+					padding=5,
+					linewidth=0,
+                ),
 				# 箭头
                 widget.TextBox(
                     background=colors["green"],
-                    foreground=colors["color1"],
+                    foreground=colors["color2"],
                     text="",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=35,
-                    padding=-1,
+                    **angle_font_size,
                     
                 ),
                 # 硬盘
                 widget.TextBox(
-                    background=colors["color1"],
+                    background=colors["color2"],
                     foreground=colors["black"],
-                    text="󰋊 ",
-                    font="JetBrainsMono Nerd Font",
+                    text="󰋊",
+                    font="MesloLGS NF Regular",
                     fontsize=icon_size,
                 ),
-                newDF,
-                widget.Sep(
-					linewidth=0,
-					background=colors["color1"],
-					padding=10,
-					size_percent=40,
+                CustomDF(
+					fontsize=font_size,
+					visible_on_warn=False,
+					format='{ud:.0f}{m} {r:.0f}%', # 已用空间和所占百分比。但是无法展示已用容量
+					measure='G',
+					#partition='/', # 指定需要显示的硬盘分区，默认根目录
+					background=colors["color2"],
+					foreground=colors["black"],
 				),
+                widget.Sep(
+					background=colors["color2"],
+					padding=5,
+					linewidth=0,
+                ),
 				# 箭头
                 widget.TextBox(
-                    background=colors["color1"],
-                    foreground=colors["color2"],
+                    background=colors["color2"],
+                    foreground=colors["color3"],
                     text="",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=35,
-                    padding=-1,
-                    
+                    **angle_font_size,
                 ),
                 # 音量
                 widget.TextBox(
-                    background=colors["color2"],
+                    background=colors["color3"],
                     foreground=colors["black"],
-                    text=" ",
-                    font="JetBrainsMono Nerd Font",
+                    text="",
+                    font="MesloLGS NF Regular",
                     fontsize=icon_size,
                 ),
                 widget.Volume(
                     fontsize=font_size,
-                    background=colors["color2"],
+                    background=colors["color3"],
                     foreground=colors["black"],
                     limit_max_volume="True",
                     update_interval=0.1,
@@ -312,98 +330,94 @@ screens = [
                     mouse_callbacks={"Button3": open_pavu},
                 ),
                 widget.Sep(
+					background=colors["color3"],
+					padding=5,
 					linewidth=0,
-					background=colors["color2"],
-					padding=10,
-					size_percent=40,
-				),
+                ),
 				# 箭头
                 widget.TextBox(
-                    background=colors["color2"],
-                    foreground=colors["color3"],
+                    background=colors["color3"],
+                    foreground=colors["white"],
                     text="",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=35,
-                    padding=-1,
-                    
+                    **angle_font_size,
                 ),
                 # Bluetooth
                 widget.TextBox(
-                    background=colors["color3"],
+                    background=colors["white"],
                     foreground=colors["black"],
-                    text=" ",
-                    font="JetBrainsMono Nerd Font",
+                    text="",
+                    font="MesloLGS NF Regular",
                     fontsize=icon_size,
                 ),
                 widget.Bluetooth(
 					fontsize=font_size,
-					background=colors["color3"],
+					background=colors["white"],
                     mouse_callbacks={"Button1": lazy.spawn("blueman-manager")},
-                    hci='/dev_F1_AB_EF_40_85_45',
+                    hci='/dev_C2_8A_A3_A4_26_A8',
                     foreground=colors["black"],
                 ),
                 widget.Sep(
+					background=colors["white"],
+					padding=5,
 					linewidth=0,
-					background=colors["color3"],
-					padding=10,
-					size_percent=40,
-				),
+                ),
 				# 箭头
                 widget.TextBox(
-                    background=colors["color3"],
-                    foreground=colors["color4"],
+                    background=colors["white"],
+                    foreground=colors["cyan"],
                     text="",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=35,
-                    padding=-1,
+                    **angle_font_size,
                     
                 ),
                 # 日期时间
                 widget.TextBox(
-                    background=colors["color4"],
+                    background=colors["cyan"],
                     foreground=colors["black"],
-                    text=" ",
-                    font="JetBrainsMono Nerd Font",
+                    text="",
+                    font="MesloLGS NF Regular",
                     fontsize=icon_size,
                 ),
                 
                 widget.Clock(
                     fontsize=font_size,
                     format="%B %e日 %A %H:%M",
-                    background=colors["color4"],
+                    background=colors["cyan"],
                     foreground=colors["black"],
                 ),
                 widget.Sep(
+					background=colors["cyan"],
+					padding=5,
 					linewidth=0,
-					background=colors["color4"],
-					padding=10,
-					size_percent=40,
-				),
+                ),
 				# 箭头
                 widget.TextBox(
-                    background=colors["color4"],
+                    background=colors["cyan"],
                     foreground=colors["background"],
                     text="",
-                    font="JetBrainsMono Nerd Font",
-                    fontsize=35,
-                    padding=-1,
+                    **angle_font_size,
                     
                 ),
                 # 电源
                 widget.TextBox(
                     background=colors["background"],
                     foreground=colors["red"],
-                    text=" ",
-                    font="JetBrainsMono Nerd Font",
+                    text="",
+                    font="MesloLGS NF Regular",
                     fontsize=icon_size,
                     mouse_callbacks={"Button1": lazy.spawn(conf_path["power_menu"])}
                 ),
+                widget.Sep(
+					background=colors["background"],
+					padding=10,
+					linewidth=0,
+                ),
             ],
             40,
-            margin=[0, 0, 5, 0],
+            margin=[0, 0, 6, 0],
         ),
-        bottom=bar.Gap(5),
-        left=bar.Gap(5),
-        right=bar.Gap(5),
+        # 设置内部间隙，也就是各个窗口之间的间隙
+        bottom=bar.Gap(6),
+        left=bar.Gap(6),
+        right=bar.Gap(6),
     ),
 ]

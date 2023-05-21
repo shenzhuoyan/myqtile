@@ -17,7 +17,7 @@ configuration {
 
 /*****----- Global Properties -----*****/
 * {
-    font:           "SF Pro Display 12";
+    font:           "MiSans 15";
     background:     #2E3440BF;
     background-alt: #383E4AFF;
     foreground:     #E5E9F0FF;
