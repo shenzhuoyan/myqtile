@@ -15,10 +15,22 @@ terminal = guess_terminal()
 cmds={
 	"powermenu":lazy.spawn("bash /home/baiguo/.config/qtile/rofi/powermenu.sh"),
 	"rofi_drun":lazy.spawn("rofi -show drun -theme launchpad"),
-	"rofi_windows":lazy.spawn("rofi -show window -theme window"),
+	"rofi_windows":lazy.spawn("rofi -show window"),
 	"print_screen":lazy.spawn("flameshot screen -n 0 -c"),
 	"shot_screen":lazy.spawn("flameshot gui"),
 }
+# 把所有浮动窗口挪到最前面
+@lazy.function
+def bring_all_floating_front(qtile):
+	# 遍历当前组的所有窗口
+	for w in qtile.current_group.windows:
+		# 如果是悬浮窗口
+		if w.floating:
+			# 就挪到最前面
+			w.bring_to_front()
+			# 并且把焦点给他，要不然你还得点一下
+			w.focus()
+			
 keys = [
     # A list of available cmds that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
@@ -59,9 +71,8 @@ keys = [
     # Win + 回车，打开一个悬浮的终端
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
 	
-	# Win + Tab 焦点在当前组的窗口间移动
-	# 我还设置了 悬浮窗口获得焦点自动挪到最前面，这样就不会有悬浮窗口被挡住的风险了
-	Key([mod], "Tab", lazy.group.next_window()),
+	# Win + Tab 把所有浮动窗口挪到最前面
+	Key([mod], "Tab", bring_all_floating_front),
 
     # Win + Z，窗口最大化、还原
     Key([mod], "z", lazy.window.toggle_maximize()),
@@ -93,9 +104,9 @@ keys = [
     # Win + E, 打开文件管理器
     Key([mod], "e", lazy.spawn("nemo"), desc="Launch File Manager"),
 
-    # Alt + Tab，浏览当前窗口。跟Windows一样。主题文件放在~/.local/share/rofi/themes
+    # ALT + Tab，浏览当前窗口。跟Windows一样。主题文件放在~/.local/share/rofi/themes
     Key([mod1], "Tab", cmds["rofi_windows"]),
-
+    
     # Win + Shift + S ，跟Windows一样，截图
     Key([mod, "shift"], "s", cmds["shot_screen"] , desc="Launches flameshot"),
     

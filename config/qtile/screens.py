@@ -49,9 +49,8 @@ def open_pavu():
 #    "font":"JetBrainsMono Nerd Font",
 #}
 
-icon_size = 30
-font_size = 25
-
+icon_size = 32
+font_size = 28
 # bar上个个组件之间的间隔
 sep = widget.Sep(
         linewidth=0,
@@ -124,14 +123,15 @@ screens = [
 					this_current_screen_border= colors["color4"], # 选中组的边框颜色（此时边框是个块）
 					block_highlight_text_color= colors["white"], # 选中的组的颜色
 					toggle=False,# 点本组跳到上一组，关掉
-					font="JetBrainsMono Nerd Font Mono Bold"
+					font="JetBrainsMono Nerd Font Mono Bold",
+					disable_drag=True, # 禁止拖动组名
+					#fontsize=font_size,
                 ),
                 widget.TextBox(
                     background=colors["blue"],
                     foreground=colors["background"],
                     text="",
                     **angle_font_size,
-                    
                 ),
                 
                 # 窗口标题
@@ -316,7 +316,7 @@ screens = [
                 widget.TextBox(
                     background=colors["color3"],
                     foreground=colors["black"],
-                    text="",
+                    text="󰕾",
                     font="MesloLGS NF Regular",
                     fontsize=icon_size,
                 ),

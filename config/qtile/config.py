@@ -76,22 +76,26 @@ for i in groups:
 
 
 # Command to find out wm_class of window: xprop | grep WM_CLASS
-
+layout_setting = {
+	"border_focus" : colors["color4"],
+	"border_normal" : colors["border"],
+	"border_width":4,
+	"margin" : 3, # 要跟screens的gap联合使用，把屏幕外边距加大，要不然窗口之间间距一叠加就是双倍，而屏幕四周还是单倍
+	"grow_amount": 5, # 调整窗口宽高时，一次移动多少
+}
 # 布局
 layouts = [
 	layout.Columns(
-        #border_focus_stack=['#d75f5f', '#8f3d3d'], 
-        border_focus = colors["color4"],
-        border_normal = colors["background"],
-        border_width=2,
-        #margin = [7, 7, 7, 7], # 设置上下左右的空隙
-        margin = 3, # 要跟screens的gap联合使用，把屏幕外边距加大，要不然窗口之间间距一叠加就是双倍，而屏幕四周还是单倍
-        grow_amount = 5, # 调整窗口宽高时，一次移动多少
+        **layout_setting,
+        border_on_single=colors["border"],
+        border_focus_stack=colors["border"],
+        border_normal_stack=colors["border"],
+        fair=True,
 	),
-	layout.Max(),
+	#layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
-    # layout.Bsp(),
+    #layout.Bsp(),
     # layout.Matrix(),
     # layout.MonadTall(),
     # layout.MonadWide(),
@@ -168,6 +172,7 @@ cursor_warp = False
 # 当悬浮的窗口获得焦点，自动挪到最前面
 @hook.subscribe.client_focus
 def bringWindowFront(w):
+	# 如果是悬浮窗口
 	if w.floating:
 		w.bring_to_front()
 
@@ -182,22 +187,28 @@ focus_on_window_activation = "smart"
 bring_front_click = "floating_only"
 # 点击窗口移动到最前面（覆盖）= 仅限浮动窗口。
 
-
-
 # 自动设为浮动窗口
-floating_layout = layout.Floating(float_rules=[
-    # Run the utility of `xprop` to see the wm class and name of an X client.
-    *layout.Floating.default_float_rules,
-    Match(wm_class='confirmreset'),  # gitk
-    Match(wm_class='makebranch'),  # gitk
-    Match(wm_class='maketag'),  # gitk
-    Match(wm_class='ssh-askpass'),  # ssh-askpass
-    Match(title='branchdialog'),  # gitk
-    Match(title='pinentry'),  # GPG key password entry
-    #Match(wm_class='uTools'),
-    Match(title='图片查看器'),
-    Match(wm_class="org.jackhuang.hmcl.Launcher"),
-    Match(wm_class="xfce4-terminal"),
+floating_layout = layout.Floating(
+	**layout_setting,
+	float_rules=[
+		# Run the utility of `xprop` to see the wm class and name of an X client.
+		*layout.Floating.default_float_rules,
+		Match(wm_class='confirmreset'),  # gitk
+		Match(wm_class='makebranch'),  # gitk
+		Match(wm_class='maketag'),  # gitk
+		Match(wm_class='ssh-askpass'),  # ssh-askpass
+		Match(title='branchdialog'),  # gitk
+		Match(title='pinentry'),  # GPG key password entry
+		#Match(wm_class='uTools'),
+		Match(title='图片查看器'),
+		Match(wm_class="org.jackhuang.hmcl.Launcher"),
+		Match(wm_class="xfce4-terminal"),
+		Match(wm_class="QQ"),
+		Match(wm_class="spark-store"),
+		Match(wm_class="Nemo"),
+		Match(wm_class="timeshift-gtk"),
+		Match(wm_class="VirtualBox Manager"),
+		Match(wm_class="xmcl"),
 ])
 auto_fullscreen = True
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo apt install -y rofi 
+sudo apt install -y rofi
 sudo apt install -y flameshot
-
+sudo apt install mate-polkit
 # 复制配置文件
 cp -r config/picom ~/.config/
 cp -r config/qtile ~/.config/
