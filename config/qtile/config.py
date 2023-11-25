@@ -108,7 +108,7 @@ layouts = [
 
 # 设置顶栏组件（widget）的默认字体
 widget_defaults = dict(
-    font='JetBrainsMono Nerd Font Mono Medium',
+    font='JetBrains Mono Regular',
     fontsize=25,
     padding=3,
     background=colors["foregound"],
@@ -201,14 +201,14 @@ floating_layout = layout.Floating(
 		Match(title='pinentry'),  # GPG key password entry
 		#Match(wm_class='uTools'),
 		Match(title='图片查看器'),
-		Match(wm_class="org.jackhuang.hmcl.Launcher"),
-		Match(wm_class="xfce4-terminal"),
-		Match(wm_class="QQ"),
-		Match(wm_class="spark-store"),
-		Match(wm_class="Nemo"),
+		# Match(wm_class="org.jackhuang.hmcl.Launcher"),
+		# Match(wm_class="xfce4-terminal"),
+		# Match(wm_class="QQ"),
+		# Match(wm_class="spark-store"),
+		# Match(wm_class="Nemo"),
 		Match(wm_class="timeshift-gtk"),
-		Match(wm_class="VirtualBox Manager"),
-		Match(wm_class="xmcl"),
+		# Match(wm_class="VirtualBox Manager"),
+		# Match(wm_class="xmcl"),
 ])
 auto_fullscreen = True
 
