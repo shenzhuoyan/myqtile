@@ -106,6 +106,7 @@
 - uTools的Linux搜索文件的插件 https://github.com/shenzhuoyan/utools_linux_find
 - 屏幕缩放，修改`~/.Xresources` 的`Xft.dpi`的值，建议是96的倍数，比如缩放1.5倍就是`144`, 执行`xrdb -merge ~/.Xresources` 生效
 - 我安装的许多软件都没有在这里列出，如果你正常用的话需要阅读配置文件来修改成自己使用的软件
+- 由于Debian12在7840hs上有核显崩溃的bug,所以我用mint了，所以配置文件中有一些部分是针对Ubuntu22.04的修改。在文件中有相关注释。
 
 ## 参考
 
