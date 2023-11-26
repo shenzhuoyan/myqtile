@@ -11,10 +11,12 @@
 cmds=("nm-applet"
 		"fcitx5"
 		#"blueman-applet"
-		"/usr/libexec/polkit-mate-authentication-agent-1"
+		#"/usr/libexec/polkit-mate-authentication-agent-1" #  这个针对debian12, 下面是ubuntu22.04,
+		"/usr/lib/x86_64-linux-gnu/polkit-mate/polkit-mate-authentication-agent-1"
 		"utools"
-		"kdeconnect-indicator"
-		"qq"
+		#"kdeconnect-indicator"
+		"motrix"
+		#"qq"
 		"xfce4-power-manager"
 		"/opt/apps/com.github.clash-for-windows/files/cfw"
 )
