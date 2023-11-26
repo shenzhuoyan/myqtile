@@ -20,7 +20,7 @@ from colors import colors
 
 
 conf_path = {
-	"wallpaper":"~/Pictures/qtile/悬崖上的金鱼姬.jpeg",
+	"wallpaper":"~/Pictures/同步/电脑壁纸/AI藏女.png",
 	"power_menu": os.path.expanduser("~/.config/qtile/rofi/powermenu.sh") # 将~替换为/home/username/
 }
 
@@ -127,7 +127,8 @@ screens = [
 					this_current_screen_border= colors["color4"], # 选中组的边框颜色（此时边框是个块）
 					block_highlight_text_color= colors["white"], # 选中的组的颜色
 					toggle=False,# 点本组跳到上一组，关掉
-					font="MesloLGS NF Bold",
+					# font="MesloLGS NF, Bold",
+					font="JetBrains Mono, ExtraBold",
 					disable_drag=True, # 禁止拖动组名
 					#fontsize=font_size,
                 ),
@@ -197,25 +198,24 @@ screens = [
                 sep,
                 # 更新
                 # 图标
-                # widget.TextBox(
-				#	background=colors["background"],
-                #    foreground=colors["green"],
-                 #   text="",
-                #    font="MesloLGS NF Regular",
-                #    fontsize=icon_size,
-                #    
-                #),
+				widget.TextBox(
+					background=colors["background"],
+					foreground=colors["green"],
+                    text=" ",
+                    font="MesloLGS NF Regular",
+                    fontsize=icon_size,
+                ),
                 # 检查更新组件
-                #widget.CheckUpdates(
-                 #   fontsize=font_size,
-                #    colour_have_updates=colors["green"],
-                #    colour_no_updates=colors["white"],
-                 #   background=colors["background"],
-                #    distro='Debian',# 根据官网提示使用apt安装他需要的软件
-                 #   no_update_string='No updates',
-                #    
-               # ),
-				#sep,
+                widget.CheckUpdates(
+					fontsize=font_size,
+                    colour_have_updates=colors["green"],
+                    colour_no_updates=colors["white"],
+                    background=colors["background"],
+                    distro='Debian',# 根据官网提示使用apt安装他需要的软件
+                    no_update_string='0',
+                    
+                ),
+				sep,
 
                 # CPU
                 widget.TextBox(
@@ -275,7 +275,9 @@ screens = [
                     fontsize=icon_size,
                     background=colors["background"],
                 ),
-                widget.Volume(
+                widget.PulseVolume(
+                # Ubuntu22.04 使用 PulseVolume, 依赖 pip install pulsectl_asyncio
+                # Debian12 使用 Volume, 依赖 sudo apt install alsa-utils
                     fontsize=font_size,
                     limit_max_volume="True",
                     update_interval=0.1,
