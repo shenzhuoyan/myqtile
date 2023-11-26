@@ -38,6 +38,7 @@ import subprocess
 from colors import colors
 # 桌面的导航栏等设置写在里screens.py里
 from screens import screens
+from libqtile.utils import send_notification
 
 scripts={
 	"autostart":os.path.expanduser("~/.config/qtile/autostart.sh"),
@@ -57,7 +58,6 @@ def autostart():
 
 # 左上角显示6个任务区
 groups = [Group(i) for i in "123456"]
-
 mod = "mod4"
 for i in groups:
     keys.extend([
@@ -73,6 +73,7 @@ for i in groups:
         # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
         #     desc="move focused window to group {}".format(i.name)),
     ])
+
 
 
 # Command to find out wm_class of window: xprop | grep WM_CLASS
@@ -108,7 +109,7 @@ layouts = [
 
 # 设置顶栏组件（widget）的默认字体
 widget_defaults = dict(
-    font='JetBrains Mono Regular',
+    font='JetBrains Mono',
     fontsize=25,
     padding=3,
     background=colors["foregound"],
@@ -157,15 +158,34 @@ dgroups_app_rules = []  # type: List
 
 # 以下配置很重要（对于uTools、QQ来说）
 # 作用：当窗口显示，把这个窗口移动到当前焦点所在的窗口中。
-# 先定义一个应用列表
-# appArray=['uTools','QQ']
+# 再定义一个窗口规则，当打开这个窗口，将其移动到指定工作区，
+# 并把屏幕切换到该工作区
+# 格式 窗口的WM_CLASS : 工作区号
+specify_group={
+'Clash for Windows':'6', 
+'星火应用商店':'6', 
+'Motrix': '6'
+	}
 @hook.subscribe.client_new
-def moveWindowToCurrentGroup(w):
-    #if w.name in appArray:
-    #    w.togroup(qtile.current_group.name) # qtile识别当前组是看（真实）鼠标在哪个组
+def client_new(w):
+	# if w.name in appArray:
+		# w.togroup(qtile.current_group.name) # qtile识别当前组是看（真实）鼠标在哪个组
+	# send_notification("qtile", f"{w}")  # 除了导入包，还需要安装显示通知的软件sudo apt install dunst
+	for app in specify_group.keys():
+		if app in w.name:
+			group = specify_group[app]
+			qtile.current_screen.toggle_group(group)
+			w.togroup(group)
+			return
 	w.togroup(qtile.current_group.name)
-	# 直接设置所有的软件只要一打开就挪到当前组
+	# 所有的软件只要一打开就挪到当前组
 
+# @hook.subscribe.focus_change
+# def focus_change():
+	# #send_notification("qtile", f"现在组:{qtile.current_group.name}, 先前组{qtile.current_screen.previous_group.name},{qtile.current_window is None}")
+	# if qtile.current_window is None and qtile.current_group.name == '6':
+	#	qtile.current_screen.toggle_group()
+	
 # 鼠标是否跟随焦点，屏幕上没窗口，焦点跑到上一个操作的组中的窗口中，然后（虚假的）鼠标就挪到屏幕中间。
 cursor_warp = False
 
